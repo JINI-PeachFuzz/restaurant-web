@@ -34,18 +34,20 @@ const RestaurantContainer = () => {
     ;(async () => {
       setLoading(true)
       const _items = await getList(search)
-      setItems(_items)
+      if (_items) {
+        setItems(_items)
 
-      const locations = _items.map(
-        ({ latitude, longitude, name, address, category }) => ({
-          lat: latitude,
-          lon: longitude,
-          name,
-          address,
-          category,
-        }),
-      )
-      setLocations(locations)
+        const locations = _items.map(
+          ({ latitude, longitude, name, address, category }) => ({
+            lat: latitude,
+            lon: longitude,
+            name,
+            address,
+            category,
+          }),
+        )
+        setLocations(locations)
+      }
 
       setLoading(false)
     })()

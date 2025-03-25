@@ -6,6 +6,7 @@ import KakaoMap from '@/app/global/components/KakaoMap'
 import RestaurantItems from '../components/RestaurantItems'
 import { getList } from '../services/actions'
 import { List } from 'react-content-loader'
+import Messages from '@/app/global/components/Messages'
 
 const Loading = () => <List />
 
@@ -34,20 +35,18 @@ const RestaurantContainer = () => {
     ;(async () => {
       setLoading(true)
       const _items = await getList(search)
-      if (_items) {
-        setItems(_items)
+      setItems(_items)
 
-        const locations = _items.map(
-          ({ latitude, longitude, name, address, category }) => ({
-            lat: latitude,
-            lon: longitude,
-            name,
-            address,
-            category,
-          }),
-        )
-        setLocations(locations)
-      }
+      const locations = _items.map(
+        ({ latitude, longitude, name, address, category }) => ({
+          lat: latitude,
+          lon: longitude,
+          name,
+          address,
+          category,
+        }),
+      )
+      setLocations(locations)
 
       setLoading(false)
     })()
@@ -66,7 +65,7 @@ const RestaurantContainer = () => {
           ...search,
           lat: pos.coords.latitude,
           lon: pos.coords.longitude,
-          limit: limit < 1 ? 50 : limit,
+          limit: limit < 1 ? 5000 : limit,
         }))
 
         setCenter({ lat: pos.coords.latitude, lon: pos.coords.longitude })
@@ -126,8 +125,10 @@ const RestaurantContainer = () => {
       )}
       {loading ? (
         <Loading />
-      ) : (
+      ) : items && items.length > 0 ? (
         <RestaurantItems items={items} onClick={onMoveToLocation} />
+      ) : (
+        <Messages color="info">조회된 식당이 없습니다.</Messages>
       )}
     </>
   )
